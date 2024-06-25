@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+@import '@fortawesome/fontawesome-svg-core/styles.css';
+
+:root {
+  --primary: #bc4123;
+  --secondary: #2b3452;
+}
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: "Poppins";
+  background: var(--secondary);
+  box-sizing: border-box;
+}
+* {
+  color: #fff;
+  margin: 0;
+}
+
+/* Login.css */
+
+.Login {
+  background-color: transparent; /* Fondo transparente */
+  color: white; /* Color del texto */
+  border-radius: 5px; /* Esquinas redondeadas */
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+
+  /* Estilo para el botón cuando se coloca el cursor encima */
+  &:hover { /* Fondo verde al pasar el cursor */
+    color: white; /* Texto blanco */
+  }
+}
+
+p {
+  margin: 20px 0;
+}
+button {
+  border: 0;
+  padding: 8px;
+  border-radius: 4px;
+  color: white;
+  background: var(--primary);
+  cursor: pointer;
+}
+
+header {
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  position: static;
+  top: 0;
+  z-index: 100;
+  
+}
+
+/* navbar */
+header nav {
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+header nav .logo {
+  display: flex;
+  align-items: center;
+}
+
+header nav img {
+  width: 30px;
+  height: 30px;
+  margin-right: auto;
+}
+
+header nav h1 {
+  margin-right: auto;
+  border-bottom: 3px solid var(--primary);
+}
+
+header nav a{
+  text-decoration: none;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5px;
+  margin-bottom:  10px;
+}
+
+header nav a.active {
+  background: var(--primary);
+  width: 110px;
+  padding: 8px;
+  border-radius: 10px;
+
+}
+
+/* page content */
+main {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+}

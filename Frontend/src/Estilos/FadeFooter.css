@@ -1,0 +1,41 @@
+/*Diseño del Fade*/
+.fade-enter {
+    opacity: 0;
+  }
+  
+  .fade-enter-active {
+    opacity: 1;
+    transition: opacity 500ms;
+  }
+  
+  .fade-exit {
+    opacity: 1;
+    transition: opacity 500ms;
+  }
+  
+  .fade-exit-active {
+    opacity: 0;
+    transition: opacity 500ms;
+  }
+  
+  .root-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 95vh;
+    margin: 0 auto;
+    max-width: 1200px;
+  }
+  
+  .content {
+    flex-grow: 1;
+  }
+  
+  .footer {
+    color: white;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  
+  
+  
