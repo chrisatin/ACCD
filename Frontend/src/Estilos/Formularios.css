@@ -1,0 +1,193 @@
+/* Estilos generales */
+form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem;
+  border-radius: 4px;
+  background-color: --secondary;
+}
+
+fieldset {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+}
+
+legend {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
+input[type="time"],
+textarea,
+select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-bottom: 1rem;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Estilos para el modal */
+.modal {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(5px); /* Agrega un efecto de blur al fondo */
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-Formulario {
+  padding: 20px;
+  border: 1px solid #888;
+  border-radius: 4px;
+  max-width: 500px;
+  text-align: center;
+  background-color: var(--primary) !important;
+}
+
+.close {
+  color: black !important;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.Siguiente {
+  background-color: var(--secondary);
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: 2px solid white;
+  cursor: pointer;
+  width: 100%;
+}
+
+.Siguiente:hover,
+.Siguiente:focus {
+  background-color: var(--primary); /* Cambia el color del borde al pasar el mouse */
+}
+
+.contenedorBotones {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5rem;
+}
+
+.BotonAgendar {
+  background-color: var(--secondary);
+  color: white;
+  padding: 14px 20px;
+  border: 2px solid white;
+  cursor: pointer;
+  width: 200px; /* Ancho fijo para los botones */
+  margin: 0 0.5rem; /* Margen horizontal entre los botones */
+}
+
+.BotonVolver:hover,
+.BotonAgendar:hover,
+.BotonVolver:focus,
+.BotonAgendar:focus {
+  background-color: var(--primary);
+}
+
+select,
+option {
+  color: var(--secondary);
+}
+
+/* Estilos para los botones de radio */
+.radio-group {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.radio-input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.radio-label {
+  display: inline-block;
+  background-color: var(--primary);
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.radio-input:checked + .radio-label {
+  background-color: --primary;
+  color: #fff;
+  border-color: --primary;
+  box-shadow: 0 0 5px rgb(248, 248, 248);
+  transform: translateY(-2px);
+}
+
+/* Group 2 (Tipos de consulta) */
+.radio-group2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  justify-items: center;
+  align-items: center;
+}
+
+.radio-group2 label {
+  width: 210px; /* Ajusta este valor según tus necesidades */
+}
+
+.radio-group2 .radio-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 12px; /* Opcional: Agrega padding */
+}
+
+.radio-group2 .radio-label img {
+  width: 30px; /* Aumenta el tamaño de la imagen */
+  height: 30px; /* Aumenta el tamaño de la imagen */
+  margin-left: 10px; /* Agrega un margen a la izquierda */
+}
+
+.IconoFormulario{
+  width: 25px;
+  height: 25px;
+  --fa-animation-duration: 5s
+}

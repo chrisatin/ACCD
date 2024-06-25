@@ -1,0 +1,47 @@
+/* Miga de Pan */
+.MigaDePan {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+}
+.MigaDePan > * {
+  display: inline-block;
+  margin-right: 10px;
+}
+.MigaDePan .crumb:after {
+  content: ">";
+  margin-left: 10px;
+}
+.MigaDePan .crumb:last-child:after {
+  display: none;
+}
+.MigaDePan .crumb a {
+  color: white;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.MigaDePan .crumb a:hover {
+  color: #bc4123;
+}
+
+.MigaDePan .crumb:last-child a {
+  font-weight: bold;
+}
+
+/* Animación de entrada */
+.MigaDePan {
+  animation: fadeInLeft 0.5s ease;
+}
+
+@keyframes fadeInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
