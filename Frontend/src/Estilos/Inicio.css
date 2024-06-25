@@ -1,8 +1,0 @@
-/*Diseño del Como Agendar*/
-.comoAgendar {
-    display: grid;
-    justify-content: center;
-    gap: 20px;
-    margin: 20px;
-    align-items: center;
-  }
