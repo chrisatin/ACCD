@@ -7,12 +7,13 @@ const Perfil = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editableData, setEditableData] = useState({});
   const { token } = useContext(AuthContext);
+  const baseURL = process.env.REACT_APP_API_BASE_URL;;
 
   useEffect(() => {
     const fetchUserData = async () => {
-      try {
-        console.log('Fetching user data with token:', token);
-        const response = await fetch('http://localhost:3001/user/profile', {
+      try {        
+        const URL = String(`${baseURL}/user/profile`);
+        const response = await fetch(URL, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -64,7 +65,9 @@ const Perfil = () => {
     } else {
       // Fetch los datos actualizados de la base de datos
       try {
-        const response = await fetch('http://localhost:3001/user/profile', {
+        const URL = String(`${baseURL}/user/profile`);
+        console.log('Fetching user data with token:', token);
+        const response = await fetch(URL, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
