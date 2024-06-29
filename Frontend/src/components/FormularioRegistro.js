@@ -42,7 +42,9 @@ const FormularioRegistro = ({ onCloseModal }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    fetch("http://localhost:3001/auth/register", {
+    const baseURL = process.env.REACT_APP_API_BASE_URL;
+    const URL = String(`${baseURL}/auth/register`);
+    fetch(URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

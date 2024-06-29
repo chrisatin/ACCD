@@ -15,6 +15,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 export default function FormularioCita() {
+  const baseURL = process.env.REACT_APP_API_BASE_URL;
   const [showModal, setShowModal] = useState(false);
   const [citaData, setCitaData] = useState({
     tipo_consulta: '',
@@ -43,8 +44,9 @@ export default function FormularioCita() {
   const handleAgendar = async (e) => {
     e.preventDefault();
 
-    try {
-      const response = await fetch('http://localhost:3001/citas/agendar', {
+      try {        
+        const URL = String(`${baseURL}/citas/agendar`);
+        const response = await fetch(URL,  {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

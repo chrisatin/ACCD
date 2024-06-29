@@ -45,7 +45,9 @@ const LoginModal = ({ isOpen, onCloseModal }) => {
   // Función para realizar el inicio de sesión
   const handleLogin = async () => {
     try {
-      const response = await fetch("http://localhost:3001/auth/login", {
+      const baseURL = process.env.REACT_APP_API_BASE_URL;
+      const URL = String(`${baseURL}/auth/login`);
+      const response = await fetch(URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

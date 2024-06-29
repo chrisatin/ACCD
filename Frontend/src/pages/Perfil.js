@@ -7,7 +7,7 @@ const Perfil = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editableData, setEditableData] = useState({});
   const { token } = useContext(AuthContext);
-  const baseURL = process.env.REACT_APP_API_BASE_URL;;
+  const baseURL = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
     const fetchUserData = async () => {
