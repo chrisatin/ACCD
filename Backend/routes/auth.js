@@ -16,7 +16,7 @@ module.exports = (db, secretKey) => {
       }
       res.status(200).send('User registered successfully');
     });
-  });
+  }); 
 
   router.post('/login', (req, res) => {
     const { email, password } = req.body;

@@ -10,7 +10,6 @@ const citasRoutes = require('./routes/citas');
 
 const app = express();
 const port = 3001;
-const saltRounds = 10;
 const secretKey = "your_jwt_secret_key";
 
 // Middleware setup

@@ -12,7 +12,7 @@ const Perfil = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {        
-        const URL = String(`${baseURL}/user/profile`);
+        const URL = `${baseURL}/user/profile`;
         const response = await fetch(URL, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -59,13 +59,35 @@ const Perfil = () => {
 
   const handleEditToggle = async () => {
     if (isEditing) {
-      // Aquí iría la lógica para guardar los datos editados
+      // Guardar los datos editados
       console.log('Guardando datos:', editableData);
-      // TODO: Implementar la llamada a la API para guardar los datos
+      try {
+        const URL = `${baseURL}/user/update`;
+        const response = await fetch(URL, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(editableData),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(`Error ${response.status}: ${errorData.message}`);
+        }
+
+        const data = await response.json();
+        console.log('User updated successfully:', data);
+        setUserData(data);
+        setEditableData(data);
+      } catch (error) {
+        console.error('Error updating data:', error.message);
+      }
     } else {
       // Fetch los datos actualizados de la base de datos
       try {
-        const URL = String(`${baseURL}/user/profile`);
+        const URL = `${baseURL}/user/profile`;
         console.log('Fetching user data with token:', token);
         const response = await fetch(URL, {
           headers: {
@@ -174,8 +196,8 @@ const Perfil = () => {
       </div>
       <br />
       <button onClick={handleEditToggle}>
-  {isEditing ? 'Guardar Cambios' : 'Editar Perfil'}
-</button>
+        {isEditing ? 'Guardar Cambios' : 'Editar Perfil'}
+      </button>
       <button onClick={handleDeleteUser} style={{ marginLeft: '10px' }}>
         Eliminar Usuario
       </button>
