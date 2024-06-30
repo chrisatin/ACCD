@@ -1,5 +1,6 @@
 import React, { useState,useEffect } from "react";
 import "../Estilos/Formularios.css";
+import "../Estilos/Responsive.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHospital,
