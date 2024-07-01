@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef } from "react";
 import Modal from "react-modal";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import "../Estilos/Login.css";
@@ -6,6 +6,7 @@ import { AuthContext } from "./AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEyeSlash, faEye, faTimes } from "@fortawesome/free-solid-svg-icons";
 import FormularioRegistro, { validateEmail } from "./FormularioRegistro";
+import ReCAPTCHA from "react-google-recaptcha";
 
 // Definimos nuestro componente funcional LoginModal que recibe props
 const LoginModal = ({ isOpen, onCloseModal }) => {
@@ -17,11 +18,13 @@ const LoginModal = ({ isOpen, onCloseModal }) => {
   const [showRegistroModal, setShowRegistroModal] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [loginError, setLoginError] = useState("");
+  const [captchaValido, setCaptchaValido] = useState(null);
 
   // Usamos el hook useContext para acceder al contexto de autenticación
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
+  const captcha = useRef(null);
 
   // Funciones para manejar cambios en el formulario
   const handleEmailChange = (e) => {
@@ -41,8 +44,22 @@ const LoginModal = ({ isOpen, onCloseModal }) => {
     setRememberMe(!rememberMe);
   };
 
+  const onCaptchaChange = () => {
+    if (captcha.current.getValue()) {
+      console.log("El usuario no es un robot");
+      setCaptchaValido(true);
+    }
+  };
+
   // Función para realizar el inicio de sesión
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    if (!captcha.current.getValue()) {
+      console.log("Por favor acepta el captcha");
+      setCaptchaValido(false);
+      return;
+    }
+
     try {
       const baseURL = process.env.REACT_APP_API_BASE_URL;
       const URL = String(`${baseURL}/auth/login`);
@@ -56,8 +73,8 @@ const LoginModal = ({ isOpen, onCloseModal }) => {
 
       if (response.ok) {
         const data = await response.json();
-        login(data.token); // Llamamos a la función de inicio de sesión del contexto con el token
-        onCloseModal(); // Cerramos el modal después del inicio de sesión
+        login(data.token);
+        onCloseModal();
       } else {
         const error = await response.json();
         setLoginError(error.message);
@@ -91,7 +108,6 @@ const LoginModal = ({ isOpen, onCloseModal }) => {
   // Renderizamos la interfaz del modal de inicio de sesión y el modal de registro
   return (
     <div className="LoginContenedor">
-      {/* Modal de inicio de sesión */}
       <Modal
         isOpen={isOpen}
         onRequestClose={closeModal}
@@ -105,7 +121,7 @@ const LoginModal = ({ isOpen, onCloseModal }) => {
             <FontAwesomeIcon icon={faTimes} />
           </button>
         </div>
-        <div className="modal-body">
+        <form onSubmit={handleLogin} className="modal-body">
           <input
             type="text"
             placeholder="Correo electrónico"
@@ -124,12 +140,27 @@ const LoginModal = ({ isOpen, onCloseModal }) => {
               value={password}
               onChange={handlePasswordChange}
             />
-            <button className="toggle-password" onClick={toggleShowPassword}>
+            <button
+              type="button"
+              className="toggle-password"
+              onClick={toggleShowPassword}
+            >
               <FontAwesomeIcon
                 icon={showPassword ? faEyeSlash : faEye}
                 className="toggle-password-icon"
               />
             </button>
+          </div>
+          <div className="recaptcha">
+            <ReCAPTCHA
+              ref={captcha}
+              sitekey="6LdLnAUqAAAAANdNxkoXLaLesHfNfk5Yf0-eNHka"
+              onChange={onCaptchaChange}
+            />
+            {captchaValido === false && (
+              <div className="error-captcha">Por favor el captcha</div>
+            )}
+            {loginError && <span className="login-error">{loginError}</span>}
           </div>
           <label className="RemenberMe">
             <input
@@ -139,22 +170,22 @@ const LoginModal = ({ isOpen, onCloseModal }) => {
             />
             Recordarme
           </label>
-          {loginError && <span className="login-error">{loginError}</span>}
           <div className="forgot-password-link">
             <Link to="/forgot-password" onClick={closeModal}>
               Olvidé mi contraseña
             </Link>
           </div>
-        </div>
-        <div className="modal-footer">
-          <button onClick={handleOpenRegistroModal}>Registrarme</button>
-          <button onClick={handleLogin} disabled={!isEmailValid}>
-            Iniciar sesión
-          </button>
-        </div>
+          <div className="modal-footer">
+            <button type="button" onClick={handleOpenRegistroModal}>
+              Registrarme
+            </button>
+            <button type="submit" disabled={!isEmailValid}>
+              Iniciar sesión
+            </button>
+          </div>
+        </form>
       </Modal>
 
-      {/* Modal de registro */}
       {showRegistroModal && (
         <Modal
           isOpen={showRegistroModal}

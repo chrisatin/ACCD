@@ -14,6 +14,7 @@ const CustomDropdown = () => {
   const handleLogout = () => {
     logout(); // Llama a la función de cierre de sesión desde el contexto
     navigate("/"); // Navega a la página principal después de cerrar sesión
+    window.location.reload();
     setIsOpen(false); // Cierra el menú después de cerrar sesión
   };
 

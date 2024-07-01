@@ -1,11 +1,11 @@
 /* Estilos para el modal */
+
 .toggle-password-icon {
   width: 20px;
   height: 20px;
   fill: black;
   padding: 100%;
 }
-
 
 .modal-overlay {
   position: fixed;
@@ -23,7 +23,7 @@
   background-color: white;
   border-radius: 8px;
   padding: 20px;
-  width: 400px;
+  width: 600px;
   max-width: 90%;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   background-color: var(--secondary);
@@ -81,6 +81,20 @@
   background-color: --primary;
 }
 
+.recaptcha {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  gap: 50px;
+}
+.error-captcha,
+.login-error {
+  font-size: 15px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 .RemenberMe {
   display: flex;
   justify-content: center;
@@ -98,6 +112,7 @@
 
 .RemenberMe input[type="checkbox"] {
   margin: 0;
+  width: 16px;
 }
 
 .toggle-password {
@@ -123,4 +138,3 @@
   color: black;
   cursor: pointer;
 }
-
