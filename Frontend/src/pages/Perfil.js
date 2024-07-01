@@ -6,7 +6,7 @@ const Perfil = () => {
   const [userData, setUserData] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editableData, setEditableData] = useState({});
-  const { token } = useContext(AuthContext);
+  const { token, logout } = useContext(AuthContext);  
   const baseURL = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
@@ -61,6 +61,13 @@ const Perfil = () => {
     if (isEditing) {
       // Guardar los datos editados
       console.log('Guardando datos:', editableData);
+      
+      // Filtrar los datos a actualizar, excluyendo el campo password si no ha sido modificado
+      const dataToUpdate = { ...editableData };
+      if (!editableData.password) {
+        dataToUpdate.password = userData.password;
+      }
+
       try {
         const URL = `${baseURL}/user/update`;
         const response = await fetch(URL, {
@@ -69,7 +76,7 @@ const Perfil = () => {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(editableData),
+          body: JSON.stringify(dataToUpdate),
         });
 
         if (!response.ok) {
@@ -108,9 +115,27 @@ const Perfil = () => {
     setIsEditing(!isEditing);
   };
 
-  const handleDeleteUser = () => {
-    // Here you would normally delete the user
-    console.log('Deleting user');
+  const handleDeleteUser = async () => {
+    try {
+      const URL = `${baseURL}/user/profile`;
+      const response = await fetch(URL, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log('User deleted successfully:', data);
+        logout(); // Salir de la sesión
+      } else {
+        console.error('Error response:', response.status, data);
+      }
+    } catch (error) {
+      console.error('Delete error:', error);
+    }
   };
 
   return (

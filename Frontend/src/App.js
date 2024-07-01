@@ -18,6 +18,8 @@ import Perfil from "./pages/Perfil";
 import CitasAgendadas from "./pages/CitasAgendadas";
 import LoginModal from "./components/Login";
 import { AuthContext } from "./components/AuthContext";
+import ForgotPassword from "./components/ForgotPassword"; // Importar la nueva página
+import ResetPassword from "./components/ResetPassword"; // Importar la nueva página
 
 const ShowLoginModal = ({ children }) => {
   const { showLoginModal } = useContext(AuthContext);
@@ -69,6 +71,8 @@ const router = createBrowserRouter(
             </PrivateRoute>
           }
         />
+        <Route path="forgot-password" element={<ForgotPassword/>} /> {/* Nueva ruta */}
+        <Route path="reset-password" element={<ResetPassword/>} /> {/* Nueva ruta */}
       </Route>
       <Route path="*" element={<NotFound />} />
     </>

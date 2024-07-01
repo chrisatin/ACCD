@@ -32,34 +32,9 @@ db.connect((err) => {
   console.log("Connected to the database.");
 });
 
-const jwt = require('jsonwebtoken');
-// Middleware to authenticate the JWT token
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-
-  console.log('Received auth header:', authHeader);
-  console.log('Extracted token:', token);
-
-  if (!token) {
-    return res.status(401).json({ message: 'Missing token' });
-  }
-
-  jwt.verify(token, secretKey, (err, user) => {
-    if (err) {
-      console.error('Token verification error:', err);
-      return res.status(403).json({ message: 'Invalid token', error: err.message });
-    }
-
-    console.log('Decoded user from token:', user);
-    req.user = user;
-    next();
-  });
-}
-
 // usa la rutas
 app.use('/auth', authRoutes(db, secretKey));
-app.use('/user', authenticateToken, userRoutes(db));
+app.use('/user', userRoutes(db));
 app.use('/citas', citasRoutes(db));
 
 // Start the server

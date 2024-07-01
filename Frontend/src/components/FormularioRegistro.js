@@ -27,8 +27,9 @@ const FormularioRegistro = ({ onCloseModal }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const closeModal = () => {onCloseModal();
-    };
+  const closeModal = () => {
+    onCloseModal();
+  };
 
   const navigateToHome = () => {
     if (location.pathname === "/") {

@@ -1,8 +1,11 @@
+const authenticateToken = require("../middleware/authentication");
 const express = require("express");
 const router = express.Router();
+//const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 
 module.exports = (db) => {
-  router.put("/update", (req, res) => {
+  router.put("/update", authenticateToken, (req, res) => {
     const {
       nombre,
       apellido,
@@ -58,7 +61,7 @@ module.exports = (db) => {
     );
   });
 
-  router.get("/profile", (req, res) => {
+  router.get("/profile", authenticateToken, (req, res) => {
     console.log("Profile route accessed");
     console.log("User from token:", req.user);
 
@@ -98,9 +101,112 @@ module.exports = (db) => {
           email: user.email,
           numDocumento: user.numDocumento,
           telefono: user.telefono,
+          password: user.password,
         });
       }
     );
   });
+
+  // Nueva ruta para solicitar restablecimiento de contraseña
+  router.post("/forgot-password", (req, res) => {
+    const { email } = req.body;
+
+    db.query(
+      "SELECT * FROM usuarios WHERE email = ?",
+      [email],
+      (err, results) => {
+        if (err) {
+          console.error("Database query error:", err);
+          return res.status(500).json({ message: "Database error", error: err.message });
+        }
+
+        if (results.length === 0) {
+          return res.status(404).json({ message: "Email not found" });
+        }
+
+        const user = results[0];
+
+        const transporter = nodemailer.createTransport({
+          service: "Gmail",
+          auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
+          },
+        });
+
+        const mailOptions = {
+          to: email,
+          from: process.env.EMAIL_USER,
+          subject: "Password Reset",
+          text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n
+            Please click on the following link, or paste this into your browser to complete the process:\n\n
+            http://localhost:3000/reset-password?email=${email}\n\n
+            If you did not request this, please ignore this email and your password will remain unchanged.\n`,
+        };
+
+        transporter.sendMail(mailOptions, (err) => {
+          if (err) {
+            console.error("Error sending email:", err);
+            return res.status(500).send("Error sending email");
+          }
+          res.status(200).send("Recovery email sent");
+        });
+      }
+    );
+  });
+
+  // Nueva ruta para restablecer la contraseña
+  router.post("/reset-password", (req, res) => {
+    const { email, password } = req.body;
+
+    db.query(
+      "SELECT * FROM usuarios WHERE email = ?",
+      [email],
+      (err, results) => {
+        if (err) {
+          console.error("Database query error:", err);
+          return res.status(500).json({ message: "Database error", error: err.message });
+        }
+
+        if (results.length === 0) {
+          return res.status(404).json({ message: "Email not found" });
+        }
+
+        db.query(
+          "UPDATE usuarios SET password = ? WHERE email = ?",
+          [password, email],
+          (err) => {
+            if (err) {
+              console.error("Error updating password:", err);
+              return res.status(500).json({ message: "Error updating password", error: err.message });
+            }
+            res.status(200).json({ message: "Password reset successfully" });
+          }
+        );
+      }
+    );
+  });
+
+  router.delete('/profile',authenticateToken, (req, res) => {
+    if (!req.user || !req.user.userId) {
+      return res.status(400).json({ message: 'Invalid token content' });
+    }
+
+    const { userId } = req.user;
+
+    db.query('DELETE FROM usuarios WHERE id = ?', [userId], (err, results) => {
+      if (err) {
+        console.error('Database delete error:', err);
+        return res.status(500).json({ message: 'Database error', error: err.message });
+      }
+
+      if (results.affectedRows === 0) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      res.json({ message: 'User deleted successfully' });
+    });
+  });
+
   return router;
 };

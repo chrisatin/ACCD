@@ -1,7 +1,6 @@
-// Importamos las librerías y componentes necesarios desde React y otras bibliotecas
 import React, { useState, useContext } from "react";
 import Modal from "react-modal";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import "../Estilos/Login.css";
 import { AuthContext } from "./AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -141,6 +140,11 @@ const LoginModal = ({ isOpen, onCloseModal }) => {
             Recordarme
           </label>
           {loginError && <span className="login-error">{loginError}</span>}
+          <div className="forgot-password-link">
+            <Link to="/forgot-password" onClick={closeModal}>
+              Olvidé mi contraseña
+            </Link>
+          </div>
         </div>
         <div className="modal-footer">
           <button onClick={handleOpenRegistroModal}>Registrarme</button>
