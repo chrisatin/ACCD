@@ -1,9 +1,6 @@
 const secretKey = "your_jwt_secret_key";
-
 const jwt = require('jsonwebtoken');
-// Middleware to authenticate the JWT token
 
-// Middleware to authenticate the JWT token
 function authenticateToken(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
@@ -15,7 +12,7 @@ function authenticateToken(req, res, next) {
     return res.status(401).json({ message: "Missing token" });
   }
 
-  jwt.verify(token, secretKey, (err, user) => {
+  jwt.verify(token, secretKey, (err, decodedToken) => {
     if (err) {
       console.error("Token verification error:", err);
       return res
@@ -23,8 +20,15 @@ function authenticateToken(req, res, next) {
         .json({ message: "Invalid token", error: err.message });
     }
 
-    console.log("Decoded user from token:", user);
-    req.user = user;
+    console.log("Decoded user from token:", decodedToken);
+    
+    // Extraer solo la información necesaria del token decodificado
+    req.user = {
+      id: decodedToken.userId,
+      email: decodedToken.email
+    };
+    
+    console.log("User object set on request:", req.user);
     next();
   });
 }
