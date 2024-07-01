@@ -94,6 +94,7 @@ const Perfil = () => {
     } else {
       // Fetch los datos actualizados de la base de datos
       try {
+        const baseURL = process.env.REACT_APP_API_BASE_URL; 
         const URL = `${baseURL}/user/profile`;
         console.log('Fetching user data with token:', token);
         const response = await fetch(URL, {
