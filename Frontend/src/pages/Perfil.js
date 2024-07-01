@@ -11,7 +11,8 @@ const Perfil = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      try {        
+      try {       
+        const baseURL = process.env.REACT_APP_API_BASE_URL; 
         const URL = `${baseURL}/user/profile`;
         const response = await fetch(URL, {
           headers: {
