@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect} from "react";
 import "../Estilos/Formularios.css";
 import "../Estilos/Responsive.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,20 +14,26 @@ import {
   faEarListen,
   faUserDoctor,
 } from "@fortawesome/free-solid-svg-icons";
+  
+
 
 export default function FormularioCita() {
-  const baseURL = process.env.REACT_APP_API_BASE_URL;
+
   const [showModal, setShowModal] = useState(false);
   const [citaData, setCitaData] = useState({
     tipo_consulta: '',
     fecha_cita: '',
     hora_cita: '',
     medico: '',
-    modalidad_consulta: ''
+    modalidad_consulta: '',
+    idMedico: null,
   });
   const [minDate, setMinDate] = useState('');
+  const [medicosDisponibles, setMedicosDisponibles] = useState([]);
+  const token = localStorage.getItem('token');
+  // const { token } = useContext(AuthContext);
+  
 
-  // useEffect para establecer la fecha mínima al cargar el componente
   useEffect(() => {
     const today = new Date();
     const formattedDate = today.toISOString().split('T')[0];
@@ -40,21 +46,60 @@ export default function FormularioCita() {
       ...prevData,
       [name]: value
     }));
+
+    if (name === 'tipo_consulta') {
+      fetchMedicosDisponibles(value);
+    }
+
+    if (name === 'medico') {
+      const selectedMedico = medicosDisponibles.find(m => m.idMedico === parseInt(value));
+      if (selectedMedico) {
+        setCitaData(prevData => ({
+          ...prevData,
+          idMedico: selectedMedico.idMedico,
+          medico: selectedMedico.nombreMedico
+        }));
+      }
+    }
+  };
+
+  const fetchMedicosDisponibles = async (especialidad) => {
+    try {
+      const baseURL = process.env.REACT_APP_API_BASE_URL;
+      const response = await fetch(`${baseURL}/medicos/${especialidad}`);
+      if (response.ok) {
+        const medicos = await response.json();
+        setMedicosDisponibles(medicos);
+      } else {
+        console.error('Error al obtener médicos');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   const handleAgendar = async (e) => {
     e.preventDefault();
 
-      try {        
-        const URL = String(`${baseURL}/citas/agendar`);
-        const response = await fetch(URL,  {
+    try {
+
+      const baseURL = process.env.REACT_APP_API_BASE_URL;
+      const response = await fetch(`${baseURL}/citas/agendar`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(citaData),
+        body: JSON.stringify({
+          tipo_consulta: citaData.tipo_consulta,
+          fecha_cita: citaData.fecha_cita,
+          hora_cita: citaData.hora_cita,
+          medico: citaData.medico,
+          modalidad_consulta: citaData.modalidad_consulta,
+          idMedico: citaData.idMedico
+        }),
       });
-
+  
       if (response.ok) {
         setShowModal(true);
       } else {
@@ -77,12 +122,12 @@ export default function FormularioCita() {
           <div className="radio-group2">
             {[
               { value: "Medicina General", icon: faStethoscope, label: "Medicina General" },
-              { value: "Pediatria", icon: faBaby, label: "Pediatria" },
-              { value: "Ginecología y Obstetricia", icon: faUserDoctor, label: "Ginecología" },
+              { value: "Pediatría", icon: faBaby, label: "Pediatría" },
+              { value: "Ginecología", icon: faUserDoctor, label: "Ginecología" },
               { value: "Cardiología", icon: faHeartPulse, label: "Cardiología" },
               { value: "Odontología", icon: faTooth, label: "Odontología" },
               { value: "Oftalmología", icon: faEye, label: "Oftalmología" },
-              { value: "Psicología/Psiquiatría", icon: faBrain, label: "Psicología" },
+              { value: "Psicología", icon: faBrain, label: "Psicología" },
               { value: "Otorrinolaringología", icon: faEarListen, label: "Otorrinolaringología" },
             ].map((option) => (
               <label key={option.value}>
@@ -124,9 +169,17 @@ export default function FormularioCita() {
 
         <fieldset>
           <legend>Médico</legend>
-          <select name="medico" onChange={handleInputChange}>
-            <option value="medico1">Dr. Juan Pérez</option>
-            <option value="medico2">Dra. María Gómez</option>
+          <select 
+            name="medico" 
+            onChange={handleInputChange}
+            disabled={!citaData.tipo_consulta}
+          >
+            <option value="">Seleccione un médico</option>
+            {medicosDisponibles.map(medico => (
+              <option key={medico.idMedico} value={medico.idMedico}>
+                {medico.nombreMedico}
+              </option>
+            ))}
           </select>
         </fieldset>
 
