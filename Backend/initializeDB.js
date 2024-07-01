@@ -1,33 +1,39 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
 function DatabaseRouter(db) {
-    router.post('/', (req, res) => {
-        const dbName = process.env.DB_NAME;
-    
-        // Dropear la base de datos si existe
-        db.query(`DROP DATABASE IF EXISTS ${dbName}`, (err) => {
+  router.post("/", (req, res) => {
+    const dbName = process.env.DB_NAME;
+
+    // Dropear la base de datos si existe
+    db.query(`DROP DATABASE IF EXISTS ${dbName}`, (err) => {
+      if (err) {
+        console.error("Error al eliminar la base de datos:", err);
+        return res
+          .status(500)
+          .json({ error: "Error al eliminar la base de datos" });
+      }
+
+      // Crear la base de datos nuevamente
+      db.query(`CREATE DATABASE ${dbName}`, (err) => {
+        if (err) {
+          console.error("Error al crear la base de datos:", err);
+          return res
+            .status(500)
+            .json({ error: "Error al crear la base de datos" });
+        }
+
+        // Seleccionar la base de datos recién creada
+        db.query(`USE ${dbName}`, (err) => {
           if (err) {
-            console.error('Error al eliminar la base de datos:', err);
-            return res.status(500).json({ error: 'Error al eliminar la base de datos' });
+            console.error("Error al seleccionar la base de datos:", err);
+            return res
+              .status(500)
+              .json({ error: "Error al seleccionar la base de datos" });
           }
-    
-          // Crear la base de datos nuevamente
-          db.query(`CREATE DATABASE ${dbName}`, (err) => {
-            if (err) {
-              console.error('Error al crear la base de datos:', err);
-              return res.status(500).json({ error: 'Error al crear la base de datos' });
-            }
-    
-            // Seleccionar la base de datos recién creada
-            db.query(`USE ${dbName}`, (err) => {
-              if (err) {
-                console.error('Error al seleccionar la base de datos:', err);
-                return res.status(500).json({ error: 'Error al seleccionar la base de datos' });
-              }
-    
-              // Crear las tablas y agregar datos iniciales
-              const sqlScript = `
+
+          // Crear las tablas y agregar datos iniciales
+          const sqlScript = `
             CREATE TABLE citas (
               id int(11) NOT NULL AUTO_INCREMENT,
               tipo_consulta enum('Medicina General','Pediatria','Ginecología','Cardiología','Odontología','Oftalmología','Psicología','Otorrinolaringología') NOT NULL,
@@ -39,6 +45,10 @@ function DatabaseRouter(db) {
               idUsuario int(11) DEFAULT NULL,
               PRIMARY KEY (id)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+            INSERT INTO \`citas\` (\`id\`, \`tipo_consulta\`, \`fecha_cita\`, \`hora_cita\`, \`medico\`, \`modalidad_consulta\`, \`idMedico\`, \`idUsuario\`) VALUES
+            (1, 'Oftalmología', '2024-07-24', '10:20:00', 'Dra. Ana Martínez', 'Presencial', 4, 1),
+            (2, 'Medicina General', '2024-07-22', '14:20:00', 'Dr. Juan Pérez', 'Virtual', 1, 1);
 
             CREATE TABLE especialidad (
               idEspecialidad int(11) NOT NULL,
@@ -98,6 +108,10 @@ function DatabaseRouter(db) {
               PRIMARY KEY (id)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+            INSERT INTO \`usuarios\` (\`id\`, \`nombre\`, \`apellido\`, \`tipoDocumento\`, \`numDocumento\`, \`genero\`, \`email\`, \`telefono\`, \`password\`) VALUES
+            (1, 'MANUEL GUILLERMO', ' FLOREZ BECERRA', 'cedula', '63369845', 'masculino', 'manu@gmail.com', '3158469885', 'P@ssw0rd!');
+
+
             ALTER TABLE citas
               ADD CONSTRAINT citas_ibfk_1 FOREIGN KEY (idMedico) REFERENCES medicos (idMedico),
               ADD CONSTRAINT citas_ibfk_2 FOREIGN KEY (idUsuario) REFERENCES usuarios (id);
@@ -107,25 +121,34 @@ function DatabaseRouter(db) {
               ADD CONSTRAINT medicos_especialidades_ibfk_2 FOREIGN KEY (idEspecialidad) REFERENCES especialidad (idEspecialidad);
          
               `;
-    
-              const queries = sqlScript.split(';').filter(query => query.trim() !== '');
 
-              // Ejecutar cada consulta por separado
-              queries.forEach(query => {
-                db.query(query, (err) => {
-                  if (err) {
-                    console.error('Error al ejecutar el script SQL:', err);
-                    return res.status(500).json({ error: 'Error al crear las tablas y agregar datos iniciales' });
-                  }
-                });
-              });
-    
-              res.json({ message: 'Base de datos reiniciada y configurada exitosamente' });
+          const queries = sqlScript
+            .split(";")
+            .filter((query) => query.trim() !== "");
+
+          // Ejecutar cada consulta por separado
+          queries.forEach((query) => {
+            db.query(query, (err) => {
+              if (err) {
+                console.error("Error al ejecutar el script SQL:", err);
+                return res
+                  .status(500)
+                  .json({
+                    error:
+                      "Error al crear las tablas y agregar datos iniciales",
+                  });
+              }
             });
+          });
+
+          res.json({
+            message: "Base de datos reiniciada y configurada exitosamente",
           });
         });
       });
-    
-      return router;
-    }
+    });
+  });
+
+  return router;
+}
 module.exports = DatabaseRouter;
