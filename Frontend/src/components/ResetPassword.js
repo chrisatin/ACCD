@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-//import "../Estilos/ResetPassword.css";
+import "../Estilos/ResetPassword.css";
 
 const validatePassword = (password) => {
   const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
