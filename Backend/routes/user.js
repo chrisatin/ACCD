@@ -224,5 +224,52 @@ module.exports = (db) => {
     });
   });
 
+  router.get("/citas", authenticateToken, (req, res) => {
+    if (!req.user || !req.user.id) {
+      return res.status(400).json({ message: "Invalid token content" });
+    }
+
+    const userId = req.user.id;
+
+    db.query(
+      "SELECT * FROM citas WHERE idUsuario = ?",
+      [userId],
+      (err, results) => {
+        if (err) {
+          console.error("Database query error:", err);
+          return res
+            .status(500)
+            .json({ message: "Database error", error: err.message });
+        }
+
+        res.json(results);
+      }
+    );
+  });
+
+  router.delete("/citas/:id", authenticateToken, (req, res) => {
+    const citaId = req.params.id;
+    const userId = req.user.id;
+
+    db.query(
+      "DELETE FROM citas WHERE id = ? AND idUsuario = ?",
+      [citaId, userId],
+      (err, results) => {
+        if (err) {
+          console.error("Database query error:", err);
+          return res
+            .status(500)
+            .json({ message: "Database error", error: err.message });
+        }
+
+        if (results.affectedRows === 0) {
+          return res.status(404).json({ message: "Cita not found" });
+        }
+
+        res.json({ message: "Cita deleted successfully" });
+      }
+    );
+  });
+
   return router;
 };

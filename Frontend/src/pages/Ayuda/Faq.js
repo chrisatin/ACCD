@@ -53,7 +53,7 @@ const preguntas = [
   {
     pregunta: '¿Cómo puedo obtener una receta médica?',
     respuesta:
-      'Después de tu consulta médica, el médico puede proporcionarte una receta médica electrónica. Puedes acceder a ella en tu cuenta y llevarla a la farmacia para obtener tus medicamentos.',
+      'Después de tu consulta médica, el médico puede proporcionarte una receta médica y llevarla a la farmacia para obtener tus medicamentos.',
   },
   {
     pregunta: '¿Qué debo hacer si llego tarde a mi cita?',

@@ -1,0 +1,51 @@
+/* CitasAgendadas.css */
+.Citas-Container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    margin: 10px;
+}
+
+.citas-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    margin: 10px;
+}
+
+.cita-card {
+    display: flex;
+    justify-self: start;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 20px;
+    margin-bottom: 16px;
+    background-color: rgba(0, 0, 0, 0.2);
+    width: 100%;
+}
+
+.cita-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+}
+
+.cita-card p {
+    margin: 8px 0;
+}
+
+.cita-card button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.cita-card button:hover {
+    background-color: #c82333;
+}

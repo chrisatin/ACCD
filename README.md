@@ -11,7 +11,7 @@ Proyecto_Web_Grupo1
 
 
 -Desplazarse en la terminal hasta acceder a la carpeta frontend e instalar las dependencias:
-    npm install @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome @splidejs/react-splide @splidejs/splide-extension-video animate.css jwt-decode react react-dom react-modal react-router-dom react-scripts react-transition-group react-google-recaptcha
+    npm install @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome @splidejs/react-splide @splidejs/splide-extension-video animate.css jwt-decode react react-dom react-modal react-router-dom react-scripts react-transition-group react-google-recaptcha axios
 
 -Luego ejecutar el comando para inicializar el frontend del proyecto:
     npm run start
