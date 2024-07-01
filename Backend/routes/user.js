@@ -65,12 +65,12 @@ module.exports = (db) => {
     console.log("Profile route accessed");
     console.log("User from token:", req.user);
 
-    if (!req.user || !req.user.userId) {
+    if (!req.user || !req.user.id) {
       console.error("No user ID found in token");
       return res.status(400).json({ message: "Invalid token content" });
     }
 
-    const { userId } = req.user;
+    const userId  = req.user.id;
 
     console.log("Fetching profile for user ID:", userId);
 
