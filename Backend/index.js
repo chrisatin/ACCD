@@ -7,6 +7,7 @@ require('dotenv').config()
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const citasRoutes = require('./routes/citas');  
+const medicosRouter = require('./routes/medicos');
 
 const app = express();
 const port = 3001;
@@ -14,7 +15,13 @@ const secretKey = "your_jwt_secret_key";
 
 // Middleware setup
 app.use(bodyParser.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000", // URL de frontend
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
   
 // Database connection setup
 const db = mysql.createConnection({
@@ -36,6 +43,7 @@ db.connect((err) => {
 app.use('/auth', authRoutes(db, secretKey));
 app.use('/user', userRoutes(db));
 app.use('/citas', citasRoutes(db));
+app.use('/medicos', medicosRouter(db));
 
 // Start the server
 app.listen(port, () => {
