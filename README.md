@@ -15,3 +15,10 @@ Proyecto_Web_Grupo1
 
 -Luego ejecutar el comando para inicializar el frontend del proyecto:
     npm run start
+
+Una vez inicializado el proyecto usar la credenciales de ejemplo para acceder a la funcionalidades del sitio
+
+    email:  manu@gmail.com
+    contraseña:  P@ssw0rd!
+
+También es posible crear un nuevo usuario con tu correo y empezar a interactuar.
