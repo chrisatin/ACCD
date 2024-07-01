@@ -187,24 +187,40 @@ module.exports = (db) => {
     );
   });
 
-  router.delete('/profile',authenticateToken, (req, res) => {
-    if (!req.user || !req.user.userId) {
+  router.delete('/profile', authenticateToken, (req, res) => {
+    if (!req.user || !req.user.id) {
       return res.status(400).json({ message: 'Invalid token content' });
     }
-
-    const { userId } = req.user;
-
-    db.query('DELETE FROM usuarios WHERE id = ?', [userId], (err, results) => {
-      if (err) {
-        console.error('Database delete error:', err);
-        return res.status(500).json({ message: 'Database error', error: err.message });
+  
+    const userId = req.user.id;
+  
+    // Consulta SQL para eliminar las citas del usuario
+    const deleteCitasSql = 'DELETE FROM citas WHERE idUsuario = ?';
+  
+    // Consulta SQL para eliminar al usuario
+    const deleteUsuarioSql = 'DELETE FROM usuarios WHERE id = ?';
+  
+    // Ejecutar la consulta para eliminar citas
+    db.query(deleteCitasSql, [userId], (errCitas, resultsCitas) => {
+      if (errCitas) {
+        console.error('Error deleting citas:', errCitas);
+        return res.status(500).json({ message: 'Database error', error: errCitas.message });
       }
-
-      if (results.affectedRows === 0) {
-        return res.status(404).json({ message: 'User not found' });
-      }
-
-      res.json({ message: 'User deleted successfully' });
+  
+      // Ejecutar la consulta para eliminar al usuario si las citas se eliminaron correctamente
+      db.query(deleteUsuarioSql, [userId], (errUsuario, resultsUsuario) => {
+        if (errUsuario) {
+          console.error('Error deleting usuario:', errUsuario);
+          // Puedes decidir revertir la operación de eliminación de citas aquí si es necesario
+          return res.status(500).json({ message: 'Database error', error: errUsuario.message });
+        }
+  
+        if (resultsUsuario.affectedRows === 0) {
+          return res.status(404).json({ message: 'User not found' });
+        }
+  
+        res.json({ message: 'User and associated citas deleted successfully' });
+      });
     });
   });
 
