@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "../Estilos/Formularios.css";
 import "../Estilos/Modal.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
