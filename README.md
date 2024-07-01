@@ -4,7 +4,7 @@ Proyecto_Web_Grupo1
 -Agregar las credenciales de logueo en mysql en el archivo .env en la carpeta de backend.
 
 -Desplazarse en la terminal hasta acceder a la carpeta backend e instalar las dependencias:
-    npm install body-parser cors dotenv express jsonwebtoken mysql2 nodemailer nodemon
+    npm install body-parser cors dotenv express jsonwebtoken mysql2 nodemailer nodemon axios
 
 -Luego ejecutar el comando para inicializar el backend del proyecto:
     node index.js
