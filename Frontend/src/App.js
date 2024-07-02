@@ -8,8 +8,7 @@ import {
 import Inicio from "./pages/Inicio";
 import AsignarCita from "./pages/AsignarCita";
 import Faq from "./pages/Ayuda/Faq";
-// import Contactenos, { contactAction } from "./pages/Ayuda/Contactenos";
-import Contactenos from "./pages/Ayuda/Contactenos"; // se cambió la anterior linea
+import Contactenos from "./pages/Ayuda/Contactenos";
 import NotFound from "./pages/NotFound";
 import RootLayout from "./layouts/RootLayout";
 import HelpLayout from "./layouts/HelpLayout";
@@ -18,8 +17,8 @@ import Perfil from "./pages/Perfil";
 import CitasAgendadas from "./pages/CitasAgendadas";
 import LoginModal from "./components/Login";
 import { AuthContext } from "./components/AuthContext";
-import ForgotPassword from "./components/ForgotPassword"; // Importar la nueva página
-import ResetPassword from "./components/ResetPassword"; // Importar la nueva página
+import ForgotPassword from "./components/ForgotPassword";
+import ResetPassword from "./components/ResetPassword";
 
 const ShowLoginModal = ({ children }) => {
   const { showLoginModal } = useContext(AuthContext);
@@ -71,8 +70,8 @@ const router = createBrowserRouter(
             </PrivateRoute>
           }
         />
-        <Route path="forgot-password" element={<ForgotPassword/>} /> {/* Nueva ruta */}
-        <Route path="reset-password" element={<ResetPassword/>} /> {/* Nueva ruta */}
+        <Route path="forgot-password" element={<ForgotPassword/>} />
+        <Route path="reset-password" element={<ResetPassword/>} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </>

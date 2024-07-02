@@ -1,13 +1,46 @@
-import { Form, redirect, useActionData } from "react-router-dom"
+import React, { useState } from "react";
+import { Form } from "react-router-dom";
 import '../../Estilos/Ayuda/Contactenos.css';
 
 export default function Contactenos() {
-  const data = useActionData() 
+  const [confirmationMessage, setConfirmationMessage] = useState("");
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+    const email = formData.get('email');
+    const message = formData.get('message');
+
+    try {
+      const response = await fetch('http://localhost:3001/user/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, message }),
+      });
+
+      const result = await response.json();
+
+      if (result.error) {
+        console.error(result.error);
+      } else {
+        setConfirmationMessage("Solicitud enviada!");
+        form.reset(); // Limpiar los campos del formulario
+        setTimeout(() => {
+          setConfirmationMessage("");
+        }, 4000);
+      }
+    } catch (error) {
+      console.error('Error al enviar el correo:', error);
+    }
+  };
 
   return (
     <div className="contactenos">
       <h3>Contactenos</h3>
-      <Form method="post" action="/Ayuda/Contactenos">
+      <Form method="post" onSubmit={handleSubmit}>
         <label>
           <span>Correo electronico:</span>
           <input type="email" name="email" required />
@@ -16,30 +49,9 @@ export default function Contactenos() {
           <span>Mensaje:</span>
           <textarea name="message" required></textarea>
         </label>
-        <button>Enviar</button>
-
-        {data && data.error && <p>{data.error}</p>}
+        <button type="submit">Enviar</button>
       </Form>
+      {confirmationMessage && <p>{confirmationMessage}</p>}
     </div>
-  )
-}
-
-export const contactAction = async ({ request }) => {
-  const data = await request.formData()
-
-  const submission = {
-    email: data.get('email'),
-    message: data.get('message')
-  }
-
-  console.log(submission)
-
-  // send your post request
-
-  if (submission.message.length < 10) {
-    return {error: 'Message must be over 10 chars long.'}
-  }
-
-  // redirect the user
-  return redirect('/')
+  );
 }

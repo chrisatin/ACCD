@@ -1,7 +1,6 @@
 const authenticateToken = require("../middleware/authentication");
 const express = require("express");
 const router = express.Router();
-//const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 
 module.exports = (db) => {
@@ -70,7 +69,7 @@ module.exports = (db) => {
       return res.status(400).json({ message: "Invalid token content" });
     }
 
-    const userId  = req.user.id;
+    const userId = req.user.id;
 
     console.log("Fetching profile for user ID:", userId);
 
@@ -117,7 +116,9 @@ module.exports = (db) => {
       (err, results) => {
         if (err) {
           console.error("Database query error:", err);
-          return res.status(500).json({ message: "Database error", error: err.message });
+          return res
+            .status(500)
+            .json({ message: "Database error", error: err.message });
         }
 
         if (results.length === 0) {
@@ -165,7 +166,9 @@ module.exports = (db) => {
       (err, results) => {
         if (err) {
           console.error("Database query error:", err);
-          return res.status(500).json({ message: "Database error", error: err.message });
+          return res
+            .status(500)
+            .json({ message: "Database error", error: err.message });
         }
 
         if (results.length === 0) {
@@ -178,7 +181,12 @@ module.exports = (db) => {
           (err) => {
             if (err) {
               console.error("Error updating password:", err);
-              return res.status(500).json({ message: "Error updating password", error: err.message });
+              return res
+                .status(500)
+                .json({
+                  message: "Error updating password",
+                  error: err.message,
+                });
             }
             res.status(200).json({ message: "Password reset successfully" });
           }
@@ -187,39 +195,43 @@ module.exports = (db) => {
     );
   });
 
-  router.delete('/profile', authenticateToken, (req, res) => {
+  router.delete("/profile", authenticateToken, (req, res) => {
     if (!req.user || !req.user.id) {
-      return res.status(400).json({ message: 'Invalid token content' });
+      return res.status(400).json({ message: "Invalid token content" });
     }
-  
+
     const userId = req.user.id;
-  
+
     // Consulta SQL para eliminar las citas del usuario
-    const deleteCitasSql = 'DELETE FROM citas WHERE idUsuario = ?';
-  
+    const deleteCitasSql = "DELETE FROM citas WHERE idUsuario = ?";
+
     // Consulta SQL para eliminar al usuario
-    const deleteUsuarioSql = 'DELETE FROM usuarios WHERE id = ?';
-  
+    const deleteUsuarioSql = "DELETE FROM usuarios WHERE id = ?";
+
     // Ejecutar la consulta para eliminar citas
     db.query(deleteCitasSql, [userId], (errCitas, resultsCitas) => {
       if (errCitas) {
-        console.error('Error deleting citas:', errCitas);
-        return res.status(500).json({ message: 'Database error', error: errCitas.message });
+        console.error("Error deleting citas:", errCitas);
+        return res
+          .status(500)
+          .json({ message: "Database error", error: errCitas.message });
       }
-  
+
       // Ejecutar la consulta para eliminar al usuario si las citas se eliminaron correctamente
       db.query(deleteUsuarioSql, [userId], (errUsuario, resultsUsuario) => {
         if (errUsuario) {
-          console.error('Error deleting usuario:', errUsuario);
+          console.error("Error deleting usuario:", errUsuario);
           // Puedes decidir revertir la operación de eliminación de citas aquí si es necesario
-          return res.status(500).json({ message: 'Database error', error: errUsuario.message });
+          return res
+            .status(500)
+            .json({ message: "Database error", error: errUsuario.message });
         }
-  
+
         if (resultsUsuario.affectedRows === 0) {
-          return res.status(404).json({ message: 'User not found' });
+          return res.status(404).json({ message: "User not found" });
         }
-  
-        res.json({ message: 'User and associated citas deleted successfully' });
+
+        res.json({ message: "User and associated citas deleted successfully" });
       });
     });
   });
@@ -269,6 +281,43 @@ module.exports = (db) => {
         res.json({ message: "Cita deleted successfully" });
       }
     );
+  });
+
+  router.post('/contact', async (req, res) => {
+    const { email, message } = req.body;
+
+    // Validar los datos del formulario
+    if (!email || !message) {
+      return res.status(400).json({ error: 'Email y mensaje son requeridos.' });
+    }
+
+    if (message.length < 10) {
+      return res.status(400).json({ error: 'El mensaje debe tener al menos 10 caracteres.' });
+    }
+
+    // Configuración del servicio de correo
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: process.env.EMAIL_USER, // Puedes cambiar esto para enviar a un correo específico
+      subject: 'Consulta de usuario',
+      text: `Un usuario quiere resolver una consulta: ${message}, correo del usuario: ${email}`,
+    };
+
+    try {
+      await transporter.sendMail(mailOptions);
+      res.status(200).json({ message: 'Correo enviado con éxito.' });
+    } catch (error) {
+      console.error('Error al enviar el correo:', error);
+      res.status(500).json({ error: 'Error al enviar el correo.' });
+    }
   });
 
   return router;

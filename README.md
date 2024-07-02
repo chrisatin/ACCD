@@ -1,6 +1,8 @@
 # ACCD
 Proyecto_Web_Grupo1
 
+OJO!: Debe tenerse activo el servicio de Apache y MySQL (Se recomienda el uso de XAMPP)
+
 -Agregar las credenciales de logueo en mysql en el archivo .env en la carpeta de backend.
 
 -Desplazarse en la terminal hasta acceder a la carpeta backend e instalar las dependencias:

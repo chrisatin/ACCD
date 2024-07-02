@@ -2,9 +2,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mysql = require("mysql2");
 const cors = require("cors");
-require('dotenv').config()
+require('dotenv').config();
 const axios = require('axios');
 
+const contactRoutes = require('./routes/user');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const citasRoutes = require('./routes/citas');  
@@ -46,6 +47,7 @@ app.use('/user', userRoutes(db));
 app.use('/citas', citasRoutes(db));
 app.use('/medicos', medicosRouter(db));
 app.use('/database', DatabaseRouter(db));
+app.use('/api', contactRoutes());
 
 async function BaseDeDatos() {
   try {
